@@ -64,7 +64,7 @@ class VisionManager:
     ) -> Dict:
         """使用智谱 GLM-4V 分析"""
         zhipu_config = self.config.get('zhipu', {})
-        api_key = zhipu_config.get('api_key')
+        api_key = zhipu_config.get('api_key') or os.environ.get(_ENV_KEY_MAP['zhipu'], '')
         model = zhipu_config.get('model', 'glm-4.6v-flash')
         base_url = zhipu_config.get('base_url', 'https://open.bigmodel.cn/api/paas/v4/chat/completions')
         
@@ -144,7 +144,7 @@ class VisionManager:
     ) -> Dict:
         """使用千问 Qwen-VL 分析"""
         qwen_config = self.config.get('qwen', {})
-        api_key = qwen_config.get('api_key')
+        api_key = qwen_config.get('api_key') or os.environ.get(_ENV_KEY_MAP['qwen'], '')
         model = qwen_config.get('model', 'qwen3-vl-plus')
         base_url = qwen_config.get('base_url', 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions')
         
@@ -212,9 +212,65 @@ class VisionManager:
         
         response = requests.post(base_url, headers=headers, json=payload)
         response.raise_for_status()
-        
+
         return response.json()
-    
+
+    def analyze_with_doubao(
+        self,
+        prompt: str,
+        images: Optional[List[str]] = None,
+        videos: Optional[List[str]] = None,
+        files: Optional[List[str]] = None,
+        thinking: bool = False,
+        stream: bool = False
+    ) -> Dict:
+        """使用豆包 Doubao 分析"""
+        doubao_config = self.config.get('doubao', {})
+        api_key = doubao_config.get('api_key') or os.environ.get(_ENV_KEY_MAP['doubao'], '')
+        model = doubao_config.get('model', 'doubao-seed-2-0-pro-260215')
+        base_url = doubao_config.get('base_url', 'https://ark.cn-beijing.volces.com/api/v3/chat/completions')
+
+        if not api_key:
+            raise ValueError("豆包 API Key 未配置")
+
+        content = []
+
+        if images:
+            for image in images:
+                image_url = self._prepare_image_url(image)
+                content.append({
+                    "type": "image_url",
+                    "image_url": {"url": image_url}
+                })
+
+        content.append({
+            "type": "text",
+            "text": prompt
+        })
+
+        payload = {
+            "model": model,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": content
+                }
+            ]
+        }
+
+        if stream:
+            payload["stream"] = True
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        response = requests.post(base_url, headers=headers, json=payload)
+        response.raise_for_status()
+
+        return response.json()
+
     def analyze(
         self,
         prompt: str,
