@@ -65,6 +65,11 @@ backend/scripts/
 # ── 生成的图片 ──────────────────────────────
 workspace/generated_images/
 
+# ── Workspace 运行时数据 ─────────────────────
+workspace/temp/
+workspace/memory/
+workspace/wiki/
+
 # ── 运行时 ──────────────────────────────────
 *.pid
 data/.*.pid
@@ -110,3 +115,4 @@ DEPENDENCIES_ANALYSIS.md
 FALLBACK_MECHANISM_ANALYSIS.md
 FILE_CLEANUP_REPORT.md
 INSTALLATION_GUIDE.md
+.claude/settings.json
