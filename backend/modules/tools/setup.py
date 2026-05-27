@@ -175,6 +175,26 @@ def register_all_tools(
     except Exception as e:
         logger.error(f"Failed to register screenshot tool: {e}")
     
+    # 6b. 注册图像分析工具
+    try:
+        from backend.modules.tools.image_analysis import ImageAnalysisTool
+
+        image_analysis_tool = ImageAnalysisTool(workspace=workspace)
+        tools.register(image_analysis_tool)
+        logger.debug("Registered image_analysis tool")
+    except Exception as e:
+        logger.error(f"Failed to register image_analysis tool: {e}")
+
+    # 6c. 注册图片生成工具
+    try:
+        from backend.modules.tools.image_generation import ImageGenerationTool
+
+        image_gen_tool = ImageGenerationTool(workspace=workspace)
+        tools.register(image_gen_tool)
+        logger.debug("Registered image_generation tool")
+    except Exception as e:
+        logger.error(f"Failed to register image_generation tool: {e}")
+
     # 7. 注册文件搜索工具
     try:
         from backend.modules.tools.file_search import FileSearchTool

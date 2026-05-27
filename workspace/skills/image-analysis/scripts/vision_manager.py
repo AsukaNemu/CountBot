@@ -7,6 +7,14 @@ from typing import Dict, List, Optional, Union
 from pathlib import Path
 
 
+# 环境变量名映射：provider -> env var
+_ENV_KEY_MAP = {
+    'doubao': 'ARK_API_KEY',
+    'zhipu': 'ZHIPUAI_API_KEY',
+    'qwen': 'DASHSCOPE_API_KEY',
+}
+
+
 class VisionManager:
     """图像识别管理器"""
     
