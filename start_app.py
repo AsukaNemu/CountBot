@@ -10,6 +10,14 @@ import sys
 import webbrowser
 import threading
 from pathlib import Path
+
+# 加载 .env 文件中的环境变量
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 from backend.utils.network import get_local_ips
 from backend.utils.runtime_env import (
     apply_bind_env,

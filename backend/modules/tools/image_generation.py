@@ -27,7 +27,6 @@ class ImageGenerationTool(Tool):
     DEFAULT_MODEL = "doubao-seedream-5-0-260128"
     DEFAULT_SIZE = "1920x1920"
     API_BASE = "https://ark.cn-beijing.volces.com/api/v3/images/generations"
-    API_KEY = os.environ.get("ARK_API_KEY", "")
 
     def __init__(self, workspace: Path):
         self.workspace = workspace.resolve()
@@ -164,6 +163,11 @@ class ImageGenerationTool(Tool):
         logger.info(f"图片生成: prompt={prompt[:50]}..., size={size}")
 
         try:
+            # 运行时读取 API Key
+            api_key = os.environ.get("ARK_API_KEY", "")
+            if not api_key:
+                return "错误：未配置 ARK_API_KEY 环境变量。请在 .env 文件中设置 ARK_API_KEY"
+
             payload: Dict[str, Any] = {
                 "model": self.DEFAULT_MODEL,
                 "prompt": prompt,
@@ -182,7 +186,7 @@ class ImageGenerationTool(Tool):
             resp = requests.post(
                 self.API_BASE,
                 headers={
-                    "Authorization": f"Bearer {self.API_KEY}",
+                    "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json",
                 },
                 json=payload,
