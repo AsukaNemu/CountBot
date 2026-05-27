@@ -290,8 +290,10 @@ class VisionManager:
             if thinking:
                 print("警告：千问模型不支持思考模式，将忽略该参数")
             return self.analyze_with_qwen(prompt, images, videos, files, stream)
+        elif use_model == 'doubao':
+            return self.analyze_with_doubao(prompt, images, videos, files, thinking, stream)
         else:
-            raise ValueError(f"不支持的模型: {use_model}，请选择 'zhipu' 或 'qwen'")
+            raise ValueError(f"不支持的模型: {use_model}，请选择 'zhipu'、'qwen' 或 'doubao'")
     
     def format_result(self, result: Dict, show_usage: bool = False) -> str:
         """格式化输出结果"""

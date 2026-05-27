@@ -58,6 +58,13 @@ data/*.db_*
 backend/tests/
 backend/scripts/
 
+# ── 环境变量和密钥 ──────────────────────────
+.env
+.env.local
+
+# ── 生成的图片 ──────────────────────────────
+workspace/generated_images/
+
 # ── 运行时 ──────────────────────────────────
 *.pid
 data/.*.pid
